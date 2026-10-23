@@ -262,6 +262,9 @@
 
     <div class="declar">Cliente ciente de que a única forma de contemplação é por <strong>Sorteio via Loteria Federal ou Lance</strong>, e que não há promessa de contemplação fora dessas regras.</div>
     <div class="field"><div class="yn"><button type="button" onclick="setYN(this,'ciente')">Confirmado</button><button type="button" onclick="setYN(this,'ciente')">Pendente</button></div></div>
+
+    <div class="declar"><strong>Privacidade (LGPD)</strong> <span class="req">*</span> — cliente informado de que os dados deste cadastro serão usados para a proposta de adesão e compartilhados com a Ademicon, e ciente da <a href="https://luccaademiconpgua-source.github.io/calculadora-de-patrimonio/privacidade.html" target="_blank" rel="noopener" style="color:var(--gold-soft)">Política de Privacidade</a>.</div>
+    <div class="field"><div class="yn"><button type="button" onclick="setYN(this,'lgpd')">Confirmado</button><button type="button" onclick="setYN(this,'lgpd')">Pendente</button></div></div>
   </section>
 
 </main>
@@ -354,7 +357,8 @@
       prefereNaoInformarBanco: bancoNaoInformar ? 'Sim' : 'Não',
       possuiConta: ynState.temconta||'', desejaInformarConta: ynState.infconta||'',
       pep: ynState.pep||'', autorizaDivulgacao: ynState.divulg||'', propositoCota: proposito,
-      cienteContemplacao: ynState.ciente||''
+      cienteContemplacao: ynState.ciente||'',
+      cienteLGPD: ynState.lgpd||'', cienteLGPDEm: ynState.lgpd==='Sim' ? new Date().toISOString() : ''
     };
   }
 
@@ -391,6 +395,7 @@
     if(proposito==='Outro') proposito = val('propositoOutro');
     r += `Propósito da cota: ${proposito||'—'}\n`;
     r += `Ciente das regras de contemplação: ${ynState.ciente||'—'}\n`;
+    r += `Ciente da Política de Privacidade (LGPD): ${ynState.lgpd==='Sim'?'Confirmado':(ynState.lgpd?'Pendente':'—')}\n`;
     return r;
   }
 
@@ -420,6 +425,11 @@
     }
     if(val('cpf') !== val('cpfConfirm')){
       showToast('CPF e confirmação de CPF não conferem', true);
+      return;
+    }
+    if(ynState.lgpd !== 'Sim'){
+      showToast('Confirme na seção 6 que o cliente está ciente da Política de Privacidade', true);
+      document.getElementById('f').scrollIntoView({behavior:'smooth'});
       return;
     }
     const btn = document.getElementById('btn-send');
